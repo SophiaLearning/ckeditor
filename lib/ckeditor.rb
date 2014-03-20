@@ -5,7 +5,8 @@ module Ckeditor
   autoload :Utils, 'ckeditor/utils'
   autoload :Http, 'ckeditor/http'
   autoload :TextArea, 'ckeditor/text_area'
-  
+  autoload :Paginatable, 'ckeditor/paginatable'
+
   module Helpers
     autoload :ViewHelper, 'ckeditor/helpers/view_helper'
     autoload :FormHelper, 'ckeditor/helpers/form_helper'
@@ -16,6 +17,7 @@ module Ckeditor
   module Hooks
     autoload :SimpleFormBuilder, 'ckeditor/hooks/simple_form'
     autoload :CanCanAuthorization, 'ckeditor/hooks/cancan'
+    autoload :PunditAuthorization, 'ckeditor/hooks/pundit'
   end
 
   module Backend
@@ -24,7 +26,7 @@ module Ckeditor
     autoload :Dragonfly, 'ckeditor/backend/dragonfly'
   end
 
-  IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/pjpeg', 'image/tiff', 'image/x-png']
+  IMAGE_TYPES = %w(image/jpeg image/png image/gif image/jpg image/pjpeg image/tiff image/x-png)
 
   DEFAULT_AUTHORIZE = Proc.new {}
 
@@ -37,16 +39,20 @@ module Ckeditor
   # Allowed image file types for upload.
   # Set to nil or [] (empty array) for all file types
   mattr_accessor :image_file_types
-  @@image_file_types = ["jpg", "jpeg", "png", "gif", "tiff"]
+  @@image_file_types = %w(jpg jpeg png gif tiff)
 
   # Allowed attachment file types for upload.
   # Set to nil or [] (empty array) for all file types
   mattr_accessor :attachment_file_types
-  @@attachment_file_types = ["doc", "docx", "xls", "odt", "ods", "pdf", "rar", "zip", "tar", "tar.gz", "swf"]
+  @@attachment_file_types = %w(doc docx xls odt ods pdf rar zip tar tar.gz swf)
 
   # Ckeditor files destination path
   mattr_accessor :relative_path
   @@relative_path = '/assets/ckeditor'
+
+  # Ckeditor assets path
+  mattr_accessor :asset_path
+  @@asset_path = (Rails::VERSION::MAJOR == 4 ? 'assets/ckeditor' : 'ckeditor')
 
   # Ckeditor assets for precompilation
   mattr_accessor :assets
@@ -55,6 +61,16 @@ module Ckeditor
   # Turn on/off filename parameterize
   mattr_accessor :parameterize_filenames
   @@parameterize_filenames = true
+
+  # Paginate assets
+  mattr_accessor :default_per_page
+  @@default_per_page = 24
+
+  # Asset restrictions
+  mattr_accessor :assets_languages
+  mattr_accessor :assets_plugins
+  @@assets_languages = nil
+  @@assets_plugins = nil
 
   # Model classes
   @@picture_model = nil
