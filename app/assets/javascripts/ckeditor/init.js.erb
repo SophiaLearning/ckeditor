@@ -6,11 +6,3 @@
     window['CKEDITOR_BASEPATH'] = "<%= asset_path(Ckeditor.asset_path) %>/";
   }
 }).call(this);
-
-function ck_load() {
-  $('.ckeditor').each(function(){
-    CKEDITOR.replace( $(this).attr('name') );
-  });
-}
-
-$(document).on('page:load', ck_load);
