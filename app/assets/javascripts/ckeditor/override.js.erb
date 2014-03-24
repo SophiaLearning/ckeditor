@@ -1,4 +1,4 @@
-window['CKEDITOR_BASEPATH'] = "/assets/ckeditor/";
+window['CKEDITOR_BASEPATH'] = "<%= assets_prefix %>/ckeditor/";
 
 window.CKEDITOR_ASSETS_MAPPING = {
 <% Rails.application.assets.each_logical_path(->(path){ path =~ /^ckeditor\// && path != 'ckeditor/override.js' }) do |asset| %>
@@ -13,8 +13,9 @@ window.CKEDITOR_GETURL = function( resource ) {
 
   // Add the timestamp, except for directories.
   if ( resource.charAt( resource.length - 1 ) != '/'  ){
-    var url = resource.match( /^(.*?:\/\/[^\/]*)\/assets\/(.+)/ );
-    if(url) resource = (CKEDITOR_ASSETS_MAPPING[url[2]] || '/assets/' + url[2]);
+    var url = resource.match( /^(.*?:\/\/[^\/]*)<%= assets_prefix.gsub('/', '\/') %>\/(.+)/ );
+    if(url) resource = (window['CKEDITOR_ASSETS_HOST'] || '') +
+      (CKEDITOR_ASSETS_MAPPING[url[2]] || '<%= assets_prefix.gsub('/', '\/') %>/' + url[2]);
   }
 
   return resource;
