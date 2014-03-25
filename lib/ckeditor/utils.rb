@@ -37,7 +37,7 @@ module Ckeditor
       end
 
       def js_fileuploader(uploader_type, options = {})
-        options = { :multiple => true, :element => "fileupload" }.merge(options)
+        options = { :multiple => true, :element => "fileupload", :sizeLimit => 2.megabytes }.merge(options)
 
         case uploader_type.to_s.downcase
           when "image" then
